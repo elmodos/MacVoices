@@ -2,50 +2,55 @@
 //  Settings.swift
 //  MacVoices
 //
-//  Created by Dima Dehtiaruk on 09/11/2022.
+//  Created by Modo Ltunzher on 09.11.2022.
 //
 
 import Foundation
 
 public protocol Settings: AnyObject {
-    var statusItemStyle: StatusItemStyle { get set }
+    var statusItemConfig: StatusItemConfig { get set }
 }
 
 public class UserDefaultsSettings: Settings {
     
     private let userDefaults: UserDefaults
+    private enum Keys {
+        static let statusItemConfig = "statusItemConfig"
+    }
     
-    init(userDefaults: UserDefaults = .standard) {
+    public init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
     }
-    
-    public var statusItemStyle: StatusItemStyle {
-        get { userDefaults.getRaw("statusItemStyle") ?? .icon }
-        set { userDefaults.setRaw("statusItemStyle", value: newValue) }
-    }
-    
-    private func save() {
-        if !userDefaults.synchronize() {
-            print("Failed to synchronize: \(userDefaults.dictionaryRepresentation())")
-        }
+
+    public var statusItemConfig: StatusItemConfig {
+        get { userDefaults.getDecodable(Keys.statusItemConfig) ?? .init() }
+        set { userDefaults.setEncodable(Keys.statusItemConfig, value: newValue) }
     }
 }
 
 extension UserDefaults {
     
-    fileprivate func getRaw<R>(_ key: String) -> R? where R: RawRepresentable, R.RawValue == Int {
-        if let rawValue = value(forKey: key) as? R.RawValue,
-           let value = R(rawValue: rawValue) {
-             return value
+    fileprivate func setEncodable<Value>(_ key: String, value: Value, synchronize: Bool = true) where Value: Encodable {
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(value)
+            set(data, forKey: String(key))
+        } catch {
+           print("Failed to encode: \(error)")
         }
-        return nil
     }
     
-    fileprivate func setRaw<R>(_ key: String, value: R, synchronize: Bool = true) where R: RawRepresentable, R.RawValue == Int {
-        set(value.rawValue, forKey: key)
-        save()
+    fileprivate func getDecodable<Value>(_ key: String) -> Value? where Value: Decodable {
+        guard let data = value(forKey: String(key)) as? Data else { return nil }
+        let decoder = JSONDecoder()
+        do {
+            return try decoder.decode(Value.self, from: data)
+        } catch {
+            print("Failed to decode: \(error)")
+            return nil
+        }
     }
-
+    
     private func save() {
         if !synchronize() {
             print("Failed to synchronize: \(dictionaryRepresentation())")

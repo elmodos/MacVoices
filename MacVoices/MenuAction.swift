@@ -11,5 +11,5 @@ public enum MenuAction {
     case setVoice(VoiceData)
     case refreshVoices
     case quitApp
-    case setStatusItemStyle(StatusItemStyle)
+    case setStatusItemValue(WritableKeyPath<StatusItemConfig, Bool>, value: Bool)
 }

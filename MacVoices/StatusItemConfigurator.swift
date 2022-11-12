@@ -2,13 +2,13 @@
 //  StatusItemConfigurator.swift
 //  MacVoices
 //
-//  Created by Dima Dehtiaruk on 09/11/2022.
+//  Created by Dima Dehtiaruk on 09.11.2022.
 //
 
 import AppKit
 
 public protocol StatusItemConfiguring {
-    func applyStatusItemStyle(_ statusItem: NSStatusItem, style: StatusItemStyle, locale: Locale?)
+    func apply(config: StatusItemConfig, statusItem: NSStatusItem, voice: VoiceData?)
 }
 
 public struct StatusItemConfigurator: StatusItemConfiguring {
@@ -19,32 +19,19 @@ public struct StatusItemConfigurator: StatusItemConfiguring {
         NSImage(systemSymbolName: systemSymbolName, accessibilityDescription: nil)
     }
     
-    public func applyStatusItemStyle(_ statusItem: NSStatusItem, style: StatusItemStyle, locale: Locale?) {
+    public func apply(config: StatusItemConfig, statusItem: NSStatusItem, voice: VoiceData?) {
         precondition(Thread.isMainThread)
         statusItem.length = NSStatusItem.variableLength
-        statusItem.button?.imagePosition = .imageLeading
-        switch style {
-        case .icon:
-            statusItem.button?.title = ""
-            statusItem.button?.image = statusItemImage
-        case .flag:
-            statusItem.button?.title = locale?.flagEmoji ?? String.undefinedFlagEmoji
-            statusItem.button?.image = nil
-        case .language:
-            statusItem.button?.title = locale?.languageName ?? "?"
-            statusItem.button?.image = nil
-        case .iconAndFlag:
-            statusItem.button?.title = locale?.flagEmoji ?? String.undefinedFlagEmoji
-            statusItem.button?.image = statusItemImage
-        case .iconAndLanguage:
-            statusItem.button?.title = locale?.languageName ?? "?"
-            statusItem.button?.image = statusItemImage
-        case .flagAndLanguage:
-            statusItem.button?.title = [locale?.flagEmoji ?? String.undefinedFlagEmoji, locale?.languageName ?? "?"].joined(separator: " ")
-            statusItem.button?.image = nil
-        case .iconAndFlagAndLanguage:
-            statusItem.button?.title = [locale?.flagEmoji ?? String.undefinedFlagEmoji, locale?.languageName ?? "?"].joined(separator: " ")
-            statusItem.button?.image = statusItemImage
-        }
+        
+        guard let button = statusItem.button else { return }
+        button.imagePosition = .imageLeading
+        button.image = config.showIcon ? statusItemImage : nil
+        
+        let components: [String?] = [
+            config.showFlag ? (voice?.locale.flagEmoji ?? String.undefinedFlagEmoji) : nil,
+            config.showLanguage ? voice?.locale.languageName : nil,
+            config.showName ? voice?.name : nil
+        ]
+        button.title = components.compactMap { $0 }.joined(separator: " ")
     }
 }

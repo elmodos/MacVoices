@@ -2,7 +2,7 @@
 //  VoiceMenuItem.swift
 //  MacVoices
 //
-//  Created by Dima Dehtiaruk on 08/11/2022.
+//  Created by Modo Ltunzher on 08.11.2022.
 //
 
 import AppKit
@@ -19,6 +19,6 @@ extension MenuItem {
                 ]
             )
         ]
-        attributedTitle = titles.joined(with: NSAttributedString(string: "\n"))
+        attributedTitle = titles.joined(with: "\n")
     }
 }

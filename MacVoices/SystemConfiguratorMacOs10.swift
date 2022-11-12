@@ -2,7 +2,7 @@
 //  SystemConfiguratorMacOsLegacy.swift
 //  MacVoices
 //
-//  Created by Dima Dehtiaruk on 08/11/2022.
+//  Created by Dima Dehtiaruk on 08.11.2022.
 //
 
 import Combine
@@ -34,8 +34,6 @@ public final class SystemConfiguratorMacOs10: SystemConfiguring {
         // Change the settings
         try await run(args: ["defaults", "write", defaultsIdentifier, "SelectedVoiceCreator", "-int", "\(synthesizerNumericID)"])
         try await run(args: ["defaults", "write", defaultsIdentifier, "SelectedVoiceID", "-int", "\(voice.numericID)"])
-        
-        //todo
         try await run(args: ["defaults", "write", defaultsIdentifier, "SelectedVoiceName", "-string", "\(voice.name)"])
 
         // Restart the SpeechSynthesisServer

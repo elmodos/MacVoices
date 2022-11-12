@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		326236E2292034E7003D568E /* StatusItemConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326236E1292034E7003D568E /* StatusItemConfig.swift */; };
 		329C105C291AB07C007BC52B /* SystemConfiguratorMacOs10.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329C105B291AB07C007BC52B /* SystemConfiguratorMacOs10.swift */; };
 		329C105E291AB092007BC52B /* SystemConfiguratorMacOs13.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329C105D291AB092007BC52B /* SystemConfiguratorMacOs13.swift */; };
 		329C1060291AF33A007BC52B /* VoiceMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329C105F291AF33A007BC52B /* VoiceMenuItem.swift */; };
 		329C1064291AF618007BC52B /* MenuBuilding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329C1063291AF618007BC52B /* MenuBuilding.swift */; };
-		329C1066291AFF23007BC52B /* MenuState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329C1065291AFF23007BC52B /* MenuState.swift */; };
+		329C1066291AFF23007BC52B /* MenuConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329C1065291AFF23007BC52B /* MenuConfig.swift */; };
 		329C1068291BAE12007BC52B /* StatusItemConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329C1067291BAE12007BC52B /* StatusItemConfigurator.swift */; };
 		329C106A291BC984007BC52B /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329C1069291BC984007BC52B /* Settings.swift */; };
 		329C106C291BD020007BC52B /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329C106B291BD020007BC52B /* String.swift */; };
@@ -42,11 +43,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		326236E1292034E7003D568E /* StatusItemConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemConfig.swift; sourceTree = "<group>"; };
 		329C105B291AB07C007BC52B /* SystemConfiguratorMacOs10.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemConfiguratorMacOs10.swift; sourceTree = "<group>"; };
 		329C105D291AB092007BC52B /* SystemConfiguratorMacOs13.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemConfiguratorMacOs13.swift; sourceTree = "<group>"; };
 		329C105F291AF33A007BC52B /* VoiceMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceMenuItem.swift; sourceTree = "<group>"; };
 		329C1063291AF618007BC52B /* MenuBuilding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBuilding.swift; sourceTree = "<group>"; };
-		329C1065291AFF23007BC52B /* MenuState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuState.swift; sourceTree = "<group>"; };
+		329C1065291AFF23007BC52B /* MenuConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuConfig.swift; sourceTree = "<group>"; };
 		329C1067291BAE12007BC52B /* StatusItemConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemConfigurator.swift; sourceTree = "<group>"; };
 		329C1069291BC984007BC52B /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		329C106B291BD020007BC52B /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -111,25 +113,26 @@
 				FAD7BE982917FD820034D47D /* MacVoices.entitlements */,
 				FAD7BE932917FD820034D47D /* Assets.xcassets */,
 				FAD7BE912917FD800034D47D /* AppDelegate.swift */,
-				329C1067291BAE12007BC52B /* StatusItemConfigurator.swift */,
 				FA55447029190911002AC847 /* AttributedString.swift */,
 				FA55446E291908E2002AC847 /* Locale.swift */,
 				FA55445E29180578002AC847 /* main.swift */,
 				FA55446029190626002AC847 /* MenuAction.swift */,
-				329C1063291AF618007BC52B /* MenuBuilding.swift */,
 				FA55446229190688002AC847 /* MenuBuilder.swift */,
+				329C1063291AF618007BC52B /* MenuBuilding.swift */,
+				329C1065291AFF23007BC52B /* MenuConfig.swift */,
 				FA554472291919A1002AC847 /* MenuItem.swift */,
-				329C1065291AFF23007BC52B /* MenuState.swift */,
+				329C1069291BC984007BC52B /* Settings.swift */,
 				FA5544682919072B002AC847 /* ShellRunner.swift */,
+				326236E1292034E7003D568E /* StatusItemConfig.swift */,
+				329C1067291BAE12007BC52B /* StatusItemConfigurator.swift */,
+				329C106B291BD020007BC52B /* String.swift */,
+				FA55446629190712002AC847 /* SystemConfiguratorFactory.swift */,
 				329C105B291AB07C007BC52B /* SystemConfiguratorMacOs10.swift */,
 				329C105D291AB092007BC52B /* SystemConfiguratorMacOs13.swift */,
-				FA55446629190712002AC847 /* SystemConfiguratorFactory.swift */,
 				FA55446C2919087C002AC847 /* VoiceAttributeKey.swift */,
 				FA55446A29190823002AC847 /* VoiceData.swift */,
-				329C105F291AF33A007BC52B /* VoiceMenuItem.swift */,
 				FA554464291906BF002AC847 /* VoiceDataProvider.swift */,
-				329C1069291BC984007BC52B /* Settings.swift */,
-				329C106B291BD020007BC52B /* String.swift */,
+				329C105F291AF33A007BC52B /* VoiceMenuItem.swift */,
 			);
 			path = MacVoices;
 			sourceTree = "<group>";
@@ -243,6 +246,7 @@
 			files = (
 				329C1064291AF618007BC52B /* MenuBuilding.swift in Sources */,
 				FA55446329190688002AC847 /* MenuBuilder.swift in Sources */,
+				326236E2292034E7003D568E /* StatusItemConfig.swift in Sources */,
 				329C106C291BD020007BC52B /* String.swift in Sources */,
 				FA55447129190911002AC847 /* AttributedString.swift in Sources */,
 				FA55446729190712002AC847 /* SystemConfiguratorFactory.swift in Sources */,
@@ -256,7 +260,7 @@
 				FA55445F29180578002AC847 /* main.swift in Sources */,
 				FA554473291919A1002AC847 /* MenuItem.swift in Sources */,
 				329C105E291AB092007BC52B /* SystemConfiguratorMacOs13.swift in Sources */,
-				329C1066291AFF23007BC52B /* MenuState.swift in Sources */,
+				329C1066291AFF23007BC52B /* MenuConfig.swift in Sources */,
 				329C1068291BAE12007BC52B /* StatusItemConfigurator.swift in Sources */,
 				FA554465291906BF002AC847 /* VoiceDataProvider.swift in Sources */,
 				FAD7BE922917FD800034D47D /* AppDelegate.swift in Sources */,

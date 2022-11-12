@@ -8,6 +8,10 @@
 import Foundation
 
 extension Sequence where Element: NSAttributedString {
+    func joined(with separator: String) -> NSAttributedString {
+        joined(with: NSAttributedString(string: separator))
+    }
+    
     func joined(with separator: NSAttributedString) -> NSAttributedString {
         let result = NSMutableAttributedString()
         enumerated().forEach { element in

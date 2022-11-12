@@ -1,5 +1,5 @@
 //
-//  SystemConfigurator.swift
+//  SystemConfiguratorFactory.swift
 //  MacVoices
 //
 //  Created by Modo Ltunzher on 07.11.2022.

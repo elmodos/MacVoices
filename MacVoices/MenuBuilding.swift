@@ -2,7 +2,7 @@
 //  MenuBuilding.swift
 //  MacVoices
 //
-//  Created by Dima Dehtiaruk on 08/11/2022.
+//  Created by Dima Dehtiaruk on 08.11.2022.
 //
 
 import AppKit
@@ -10,7 +10,7 @@ import Combine
 
 public struct MenuBuildingPublishers {
     let menuActions: PassthroughSubject<MenuAction, Never>
-    let menuState: AnyPublisher<MenuState, Never>
+    let menuConfig: AnyPublisher<MenuConfig, Never>
 }
 
 public protocol MenuBuilding {

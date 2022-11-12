@@ -15,23 +15,24 @@ class AppDelegate: NSObject {
     private let voiceDataProvider: VoiceDataProviding = VoiceDataProvider()
     private let systemConfigurator: SystemConfiguring = SystemConfiguratorFactory().makeSystemConfigurator()
     private let menuActionSubject = PassthroughSubject<MenuAction, Never>()
-    private let menuStateSubject = CurrentValueSubject<MenuState, Never>(.init())
+    private lazy var menuConfigSubject = CurrentValueSubject<MenuConfig, Never>(makeInitialMenuConfig())
     private let settings: Settings = UserDefaultsSettings()
     private var subscriptions = Set<AnyCancellable>()
 }
 
 extension AppDelegate: NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        menuStateSubject.value = .init(
-            currentVoice: voiceDataProvider.currentVoice,
-            statusItemStyle: settings.statusItemStyle
-        )
         refreshVoices()
         setupBindings()
     }
 }
 
 extension AppDelegate {
+    
+    private func makeInitialMenuConfig() -> MenuConfig {
+        .init(currentVoice: voiceDataProvider.currentVoice, statusItemConfig: settings.statusItemConfig)
+    }
+    
     private func setupBindings() {
         // Actions triggered by menu items
         menuActionSubject
@@ -43,22 +44,24 @@ extension AppDelegate {
                     self?.refreshVoices()
                 case .quitApp:
                     self?.quitApp()
-                case .setStatusItemStyle(let style):
-                    self?.setStatusItemStyle(style)
+                case let .setStatusItemValue(keyPath, value):
+                    self?.setStatusItemValue(keyPath: keyPath, value: value)
                 }
             }
             .store(in: &subscriptions)
         
         // Icon style to status item
-        menuStateSubject
+        menuConfigSubject
             .removeDuplicates()
-            .map { [weak self] in
-                (style: $0.statusItemStyle, locale: self?.voiceDataProvider.currentVoice?.locale)
-            }
+            .map(\.statusItemConfig)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let self else { return }
-                self.statusItemConfigurator.applyStatusItemStyle(self.statusItem, style: $0.style, locale:  $0.locale)
+                self.statusItemConfigurator.apply(
+                    config: $0,
+                    statusItem: self.statusItem,
+                    voice: self.voiceDataProvider.currentVoice
+                )
             }
             .store(in: &subscriptions)
     }
@@ -67,7 +70,7 @@ extension AppDelegate {
         Task {
             do {
                 try await systemConfigurator.setSystemVoice(voiceData)
-                menuStateSubject.value.currentVoice = voiceDataProvider.currentVoice
+                menuConfigSubject.value.currentVoice = voiceDataProvider.currentVoice
             } catch {
                 print(error)
             }
@@ -79,7 +82,7 @@ extension AppDelegate {
             voices: voiceDataProvider.voices(),
             publishers: MenuBuildingPublishers(
                 menuActions: menuActionSubject,
-                menuState: menuStateSubject.eraseToAnyPublisher()
+                menuConfig: menuConfigSubject.eraseToAnyPublisher()
             )
         )
     }
@@ -88,8 +91,9 @@ extension AppDelegate {
         NSApplication.shared.terminate(self)
     }
     
-    private func setStatusItemStyle(_ style: StatusItemStyle) {
-        settings.statusItemStyle = style
-        menuStateSubject.value.statusItemStyle = style
+    private func setStatusItemValue<Value>(keyPath: WritableKeyPath<StatusItemConfig, Value>, value: Value) {
+        let statusItemConfig = menuConfigSubject.value.statusItemConfig.byMutating(value, keyPath: keyPath).adjusted()
+        menuConfigSubject.value.statusItemConfig = statusItemConfig
+        settings.statusItemConfig = statusItemConfig
     }
 }

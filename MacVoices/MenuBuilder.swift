@@ -14,14 +14,14 @@ public struct MenuBuilder: MenuBuilding {
         let menu = NSMenu()        
         [
             itemsVoicesEnhanced(from: voices, publishers: publishers),
-            [NSMenuItem.separator()],
             itemsVoicesOther(from: voices, publishers: publishers),
-            itemOptions(publishers: publishers),
+            [NSMenuItem.separator()],
+            itemMenuBarOptions(publishers: publishers),
             itemRefresh(publishers: publishers),
             itemQuit(publishers: publishers),
         ]
-            .joined()
-            .forEach { menu.addItem($0) }
+        .joined()
+        .forEach { menu.addItem($0) }
         
         return menu
     }
@@ -45,14 +45,16 @@ public struct MenuBuilder: MenuBuilding {
         return [menuItemOtherVoices]
     }
     
-    private func itemOptions(publishers: MenuBuildingPublishers) -> [NSMenuItem] {
+    private func itemMenuBarOptions(publishers: MenuBuildingPublishers) -> [NSMenuItem] {
         let submenu = NSMenu()
-        StatusItemStyle.allCases
-            .map { option in
-                let menuItem = MenuItem(statusItemStyle: option, publishers: publishers)
-                return menuItem
-            }
-            .forEach { submenu.addItem($0) }
+        
+        [
+            MenuItem(title: "Icon", keyPath: \.showIcon, publishers: publishers),
+            MenuItem(title: "Flag", keyPath: \.showFlag, publishers: publishers),
+            MenuItem(title: "Language", keyPath: \.showLanguage, publishers: publishers),
+            MenuItem(title: "Name", keyPath: \.showName, publishers: publishers)
+        ]
+        .forEach { submenu.addItem($0)}
 
         let menuItemOptions = NSMenuItem(title: "Options", action: nil, keyEquivalent: "")
         menuItemOptions.submenu = submenu
@@ -74,18 +76,19 @@ public struct MenuBuilder: MenuBuilding {
 
 extension MenuItem {
     fileprivate convenience init(voice: VoiceData, publishers: MenuBuildingPublishers) {
-        self.init(title: "", action: nil, keyEquivalent: "") // TODO: use .init()
+        self.init(title: "", action: nil, keyEquivalent: "")
         setVoice(voice)
         setTarget { publishers.menuActions.send(.setVoice(voice)) }
-        subscribeCheckedState(publishers.menuState.map { $0.currentVoice?.identifier == voice.identifier }.eraseToAnyPublisher())
-    }
-    
-    fileprivate convenience init(statusItemStyle: StatusItemStyle, publishers: MenuBuildingPublishers) {
-        self.init(title: statusItemStyle.asTitle, action: nil, keyEquivalent: "")
-        setTarget {
-            publishers.menuActions.send(.setStatusItemStyle(statusItemStyle))
-        }
-        subscribeCheckedState(publishers.menuState.map { $0.statusItemStyle == statusItemStyle }.eraseToAnyPublisher())
+        subscribeCheckedState(publishers.menuConfig.map { $0.currentVoice?.identifier == voice.identifier }.eraseToAnyPublisher())
     }
 
+    fileprivate convenience init(title: String, keyPath: WritableKeyPath<StatusItemConfig, Bool>, publishers: MenuBuildingPublishers) {
+        self.init(title: title, action: nil, keyEquivalent: "")
+        subscribeCheckedState(publishers.menuConfig.map(\.statusItemConfig).map(keyPath).eraseToAnyPublisher())
+ 
+        setTarget { [weak self] in
+            let isChecked = self?.state == .on
+            publishers.menuActions.send(.setStatusItemValue(keyPath, value: !isChecked))
+        }
+    }
 }

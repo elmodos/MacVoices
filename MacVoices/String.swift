@@ -2,7 +2,7 @@
 //  String.swift
 //  MacVoices
 //
-//  Created by Dima Dehtiaruk on 09/11/2022.
+//  Created by Modo Ltunzher on 09.11.2022.
 //
 
 import Foundation
