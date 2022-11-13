@@ -30,7 +30,7 @@ extension AppDelegate: NSApplicationDelegate {
 extension AppDelegate {
     
     private func makeInitialMenuConfig() -> MenuConfig {
-        .init(currentVoice: voiceDataProvider.currentVoice, statusItemConfig: settings.statusItemConfig)
+        .init(currentVoice: voiceDataProvider.currentVoice, statusItemConfig: settings.statusItemConfig.adjusted())
     }
     
     private func setupBindings() {
